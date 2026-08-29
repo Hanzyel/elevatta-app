@@ -1,0 +1,88 @@
+{
+  "name": "Elevatta ERP | Produção, Qualidade e Almoxarifado",
+  "short_name": "Elevatta",
+  "description": "ERP de obra offline-first: apontamentos, FVS e medições, validação/consolidação e controle de ferramentas com sincronização Microsoft 365 / SharePoint",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d1c33",
+  "theme_color": "#10233f",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "/",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Apontamento",
+      "short_name": "Apontamento",
+      "url": "/?modo=ap",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "FVS e Medição",
+      "short_name": "FVS",
+      "url": "/?modo=rf",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Ferramentas",
+      "short_name": "Ferramentas",
+      "url": "/erp.html#ferramentas",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Validação",
+      "short_name": "Validação",
+      "url": "/erp.html#validacao",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

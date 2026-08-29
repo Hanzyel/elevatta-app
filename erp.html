@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d2038">
+<title>Elevatta ERP · Control Tower</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png">
+<link rel="stylesheet" href="./erp.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><img src="./icon-192.png" alt=""><div><b>ELEVATTA</b><span>ERP DE OBRA</span></div></div>
+    <nav id="sideNav">
+      <button data-page="dashboard" class="on"><span>◫</span><b>Visão geral</b></button>
+      <button data-page="apontamentos"><span>☷</span><b>Apontamentos</b></button>
+      <button data-page="qualidade"><span>✓</span><b>Qualidade / FVS</b></button>
+      <button data-page="validacao"><span>⌁</span><b>Validação</b></button>
+      <button data-page="ferramentas"><span>⚒</span><b>Ferramentas</b></button>
+      <button data-page="cadastros"><span>▦</span><b>Cadastros</b></button>
+      <button data-page="administracao"><span>⚙</span><b>Administração</b></button>
+    </nav>
+    <div class="side-bottom"><button id="openMobile">Abrir app operacional</button><small>REV40 · SharePoint + offline-first</small></div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button class="hamb" id="hamb">☰</button>
+      <div class="page-title"><small id="eyebrow">ELEVATTA · CONTROL TOWER</small><h1 id="pageTitle">Visão geral</h1></div>
+      <div class="top-status"><span class="net-dot" id="netDot"></span><span id="netText">Preparando…</span><button id="syncBtn">Sincronizar</button></div>
+    </header>
+    <section class="global-filter" id="globalFilter">
+      <label>De<input type="date" id="fDe"></label>
+      <label>Até<input type="date" id="fAte"></label>
+      <label>Obra<select id="fObra"><option value="">Todas</option></select></label>
+      <label>Pacote<select id="fPacote"><option value="">Todos</option></select></label>
+      <label>Pavimento<select id="fPav"><option value="">Todos</option></select></label>
+      <label>Local / frente<select id="fLocal"><option value="">Todos</option></select></label>
+      <label>Funcionário<select id="fFunc"><option value="">Todos</option></select></label>
+      <button id="clearFilters" class="ghost">Limpar filtros</button>
+    </section>
+    <section id="content" class="content"><div class="loading-card">Carregando base local…</div></section>
+  </main>
+</div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="drawer"><div class="drawer-head"><div><small id="drawerEyebrow">DETALHE</small><h2 id="drawerTitle">Registro</h2></div><button id="drawerClose">×</button></div><div id="drawerBody" class="drawer-body"></div></aside>
+<div class="toast" id="toast"></div>
+<script src="./exceljs.min.js"></script>
+<script src="./erp-core.js"></script>
+<script src="./validator.js"></script>
+<script src="./erp.js"></script>
+<script>
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+  navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>{try{r.update()}catch(e){}}).catch(console.warn);
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    try{if(sessionStorage.getItem('elevatta_erp_sw_reload_once')==='1')return;sessionStorage.setItem('elevatta_erp_sw_reload_once','1');location.reload()}catch(e){location.reload()}
+  });
+  window.addEventListener('pageshow',()=>{try{sessionStorage.removeItem('elevatta_erp_sw_reload_once')}catch(e){}});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+ELEVATTA ERP REV40.1
+
+ABERTURA:
+- Mobile/PWA operacional: /
+- ERP Desktop / Control Tower: /erp.html
+
+MÓDULOS:
+01 Apontamentos
+02 Qualidade / FVS + Medição
+03 Validação & Consolidação
+04 Ferramentas / Almoxarifado
++ Cadastros e Administração
+
+OFFLINE:
+- PWA abre do cache após a primeira carga online.
+- Registros ficam protegidos em IndexedDB/outbox.
+- A sincronização é automática quando a internet retorna.
+- O Service Worker também processa a outbox ERP quando Background Sync está disponível.
+- Página e Service Worker usam trava compartilhada contra envio duplicado.
+
+FERRAMENTAS:
+- FER-001 a FER-050 já existem como posições.
+- Enquanto não recebermos a lista real, ficam INATIVAS / CADASTRO PENDENTE.
+- Retirada exige funcionário + obra + pacote + local + almoxarife + assinatura.
+- Devolução exige responsável pelo recebimento e condição.
+- Conflitos ficam visíveis em ERP > Administração.
+
+SHAREPOINT:
+- Use a BASE_ELEVATTA_SHAREPOINT.xlsx deste pacote.
+- Não altere nomes de tabelas/colunas sem atualizar erp-schema.json.
+
+RENDER:
+Build: npm install
+Start: npm start
+Health: /healthz
+Versão: 40.1.0
+
+PENDÊNCIA DE CADASTRO:
+Enviar a relação real das ferramentas 01–50 (número + nome; marca/modelo/série se houver) para completar o patrimônio e pesquisar imagens de referência corretas.
+
+VALIDAÇÃO:
+- CRÍTICO = BLOQUEADO; não grava no SharePoint.
+- De/para de funcionário é manual e auditado.
+- Fotos/assinaturas são visualizadas no ERP pelo proxy autenticado /api/erp/file.
+
+PERFIS:
+- Estrutura USUARIOS já existe, mas o bloqueio por perfil aguarda confirmação da matriz de permissões.
+- Consulte DADOS_PENDENTES_REV40.md.

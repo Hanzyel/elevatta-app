@@ -1,0 +1,14 @@
+{
+  "name": "elevatta-erp-microsoft365",
+  "version": "40.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Elevatta ERP REV40 — produção, qualidade/FVS, validação e almoxarifado offline-first com Data Gateway Microsoft 365 / SharePoint",
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check m365.js && node --check rev32.js && node --check rev33.js && node --check sw.js && node --check erp-core.js && node --check validator.js && node --check erp.js"
+  },
+  "engines": {
+    "node": ">=20 <25"
+  }
+}
