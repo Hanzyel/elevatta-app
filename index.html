@@ -4758,15 +4758,24 @@ function carregarCadastro(){
   }catch(e){}
   CADF=SEED.func.slice(); CADP=SEED.pac.slice(); salvarCadastro();
 }
-function salvarCadastro(){ ST.set('ap_cadastro',JSON.stringify({f:CADF,p:CADP})); try{window.ElevattaM365?.markCatalogDirty?.();window.dispatchEvent(new CustomEvent('elevatta-packages-updated'));}catch(e){} }
-function recarregarCadastro(){try{const d=JSON.parse(ST.get('ap_cadastro')||'{}');if(Array.isArray(d.f))CADF=d.f;if(Array.isArray(d.p))CADP=d.p;window.dispatchEvent(new CustomEvent('elevatta-packages-updated'));render();return true;}catch(e){console.warn('Falha ao recarregar cadastro local:',e);return false;}}
+function salvarCadastro(){ ST.set('ap_cadastro',JSON.stringify({f:CADF,p:CADP})); ST.set('elevatta_m365_catalog_dirty_v1','1'); try{window.ElevattaM365?.markCatalogDirty?.();window.dispatchEvent(new CustomEvent('elevatta-packages-updated'));}catch(e){} }
+function recarregarCadastro(){try{const d=JSON.parse(ST.get('ap_cadastro')||'{}');if(Array.isArray(d.f))CADF=d.f;if(Array.isArray(d.p))CADP=d.p;garantirServicosGerais();window.dispatchEvent(new CustomEvent('elevatta-packages-updated'));render();return true;}catch(e){console.warn('Falha ao recarregar cadastro local:',e);return false;}}
+const SERVICOS_GERAIS_OBRIGATORIOS=[
+  {c:'GER-LIMP',n:'Limpeza',et:'13 - Serviços gerais',ob:'',l:'',t:'',st:'Em andamento',global:true},
+  {c:'GER-MANU',n:'Manutenção',et:'13 - Serviços gerais',ob:'',l:'',t:'',st:'Em andamento',global:true},
+  {c:'GER-BETO',n:'Betoneira',et:'13 - Serviços gerais',ob:'',l:'',t:'',st:'Em andamento',global:true},
+  {c:'GER-INDI',n:'Serviços indiretos',et:'13 - Serviços gerais',ob:'',l:'',t:'',st:'Em andamento',global:true}
+];
 function garantirServicosGerais(){
-  const gerais=[
-    {c:'GER-LIMP',n:'Limpeza',et:'13 - Serviços gerais',ob:'',l:'',t:'',st:'Em andamento',global:true},
-    {c:'GER-MANU',n:'Manutenção',et:'13 - Serviços gerais',ob:'',l:'',t:'',st:'Em andamento',global:true}
-  ];
   let mudou=false;
-  gerais.forEach(g=>{ if(!CADP.some(p=>p.c===g.c)){ CADP.push(g); mudou=true; } });
+  SERVICOS_GERAIS_OBRIGATORIOS.forEach(g=>{
+    const atual=CADP.find(p=>p.c===g.c);
+    if(!atual){CADP.push(Object.assign({},g));mudou=true;return;}
+    if(atual.n!==g.n){atual.n=g.n;mudou=true;}
+    if(atual.et!==g.et){atual.et=g.et;mudou=true;}
+    if(atual.global!==true){atual.global=true;mudou=true;}
+    if(!atual.st){atual.st=g.st;mudou=true;}
+  });
   if(mudou) salvarCadastro();
 }
 
@@ -6652,7 +6661,7 @@ window.ElevattaEngine=(function(){
     const fm={},pm={};
     (s.funcs||[]).forEach((f,i)=>{const m=String(f.m||'').trim();if(!m)out.push(issue('crit','Funcionário sem matrícula','Cadastro #'+(i+1),'Cadastro'));else if(fm[m])out.push(issue('crit','Matrícula duplicada',m,'Cadastro'));else fm[m]=1;if(!String(f.n||'').trim())out.push(issue('crit','Funcionário sem nome','Matrícula '+(m||'—'),'Cadastro'));if(!String(f.f||'').trim())out.push(issue('warn','Função não informada',String(f.n||m||'—'),'Cadastro'));if(!String(f.r||'').trim())out.push(issue('warn','Regime não informado',String(f.n||m||'—'),'Cadastro'));});
     (s.pacs||[]).forEach((p,i)=>{const c=String(p.c||'').trim();if(!c)out.push(issue('crit','Serviço sem código','Cadastro de pacote #'+(i+1),'Cadastro'));else if(pm[c])out.push(issue('crit','Código de serviço duplicado',c,'Cadastro'));else pm[c]=1;if(!String(p.n||'').trim())out.push(issue('crit','Serviço sem descrição',c||'#'+(i+1),'Cadastro'));if(!String(p.et||'').trim())out.push(issue('warn','Serviço sem etapa',c||p.n||'—','Cadastro'));});
-    ['GER-LIMP','GER-MANU'].forEach(c=>{if(!(s.pacs||[]).some(p=>p.c===c))out.push(issue('crit','Serviço geral ausente',c==='GER-LIMP'?'Limpeza':'Manutenção','Cadastro'));});
+    [['GER-LIMP','Limpeza'],['GER-MANU','Manutenção'],['GER-BETO','Betoneira'],['GER-INDI','Serviços indiretos']].forEach(([c,n])=>{if(!(s.pacs||[]).some(p=>p.c===c))out.push(issue('crit','Serviço geral ausente',n,'Cadastro'));});
     const nums=(s.pacs||[]).map(p=>/^PCT-(\d+)$/.exec(String(p.c||''))).filter(Boolean).map(m=>Number(m[1])).sort((a,b)=>a-b);if(nums.length){const falt=[];for(let i=nums[0];i<=nums[nums.length-1];i++)if(!nums.includes(i))falt.push('PCT-'+String(i).padStart(3,'0'));if(falt.length)out.push(issue('info','Lacuna na sequência de pacotes',falt.join(', ')+' não consta no cadastro. Confirme se é intencional.','Cadastro'));}
     return out;
   }
